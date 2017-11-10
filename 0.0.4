@@ -40,12 +40,12 @@ int **fill(int **mat,unsigned int stroki,unsigned int stolbi,int x0,int y0,int s
         mat[y0][j]=start;
         start++;
     }
-    j=j-1;                                  //не было перепонения памяти
+    j=j-1;                                  
     for (i++; i<stroki-y0; i++) {
         mat[i][j]=start;
         start++;
     }
-    i=i-1;                                //не было перепонения памяти
+    i=i-1;                                
     for (j--; j>=x0; j--) {
         mat[i][j]=start;
         start++;
