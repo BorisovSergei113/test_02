@@ -1,0 +1,87 @@
+#include <iostream>
+#include <sstream>
+using namespace std;
+
+int  ** create_mat ( unsigned int stroki,unsigned int stolbi) {
+    int ** mat=new int*[stroki];
+    for (int i=0; i<stroki; i++) {
+        mat[i]=new int [stolbi];
+    }
+    return mat;
+}
+
+void del_mem(int **mat,unsigned int stroki,unsigned int stolbi){
+    for (int i=0; i<stroki; i++) {
+        delete [] mat[i];
+    }
+    delete [] mat;
+}
+
+void enter_size(unsigned int& stroki, unsigned int& stolbi)
+{
+    string str;
+    char zap;
+    getline(cin,str);
+    istringstream size(str);
+    if ((size >>stroki) && (size >>zap) && (size >> stolbi) && (zap == ',')&&(size.eof())) {
+        
+    }
+    else
+    {cout<<"An error has occured while reading input data"<<endl;
+        exit(0);
+    }
+}
+
+
+int **fill(int **mat,unsigned int stroki,unsigned int stolbi,int x0,int y0,int start){
+    int i=y0;
+    int j=x0;
+    for (j; j<stolbi-x0; j++) {
+        mat[y0][j]=start;
+        start++;
+    }
+    j=j-1;                                  //не было перепонения памяти
+    for (i++; i<stroki-y0; i++) {
+        mat[i][j]=start;
+        start++;
+    }
+    i=i-1;                                //не было перепонения памяти
+    for (j--; j>=x0; j--) {
+        mat[i][j]=start;
+        start++;
+    }
+    for (i--; i>y0; i--) {
+        mat[i][x0] =start;
+        start++;
+    }
+    
+    if(stroki-2*y0>2 && stolbi-2*x0>2)
+    { fill(mat,stroki,stolbi,x0+1,y0+1,start);
+      return mat;
+    }
+    else return mat;
+    
+}
+
+void out(int **mat3,unsigned int stroki,unsigned int stolbi){
+    
+    for (int i=0; i<stroki; i++) {
+        for (int j=0; j<stolbi; j++) {
+            cout<<mat3[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+}
+
+int main(){
+    unsigned int stroki = 0,stolbi=0;
+    int x0=0;
+    int y0=0;
+    int start=1;
+    enter_size(stroki,stolbi);
+    int **mat = create_mat(stroki,stolbi);
+    fill(mat,stroki,stolbi,x0,y0,start);
+    out(mat,stroki,stolbi);
+    del_mem(mat, stroki, stolbi);
+    return 0;
+}
