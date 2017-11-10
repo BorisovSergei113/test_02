@@ -1,0 +1,136 @@
+#include <iostream>
+#include <sstream>
+using namespace std;
+
+int  ** create_mat ( unsigned int stroki,unsigned int stolbi) {
+    int ** mat=new int*[stroki];
+    for (int i=0; i<stroki; i++) {
+        mat[i]=new int [stolbi];
+    }
+    return mat;
+}
+
+void enter_mat(int stroki,int stolbi,int **mat){
+    
+    for (int i =0; i<stroki ; i++)
+    {
+        
+        for (string string;getline(cin, string);  )
+        {  istringstream stream (string);
+            bool failure = false;
+            for (int j =0; j<stolbi; j++)
+            {
+                if (!(stream>>mat[i] [j]))
+                {
+                    failure = true;
+                    break;
+                }
+            }
+            if(!failure)
+                break;
+            else
+            {cout<<"An error has occured while reading input data"<<'\n';}
+        }
+    }
+}
+void del_mem(int **mat,unsigned int stroki,unsigned int stolbi){
+    for (int i=0; i<stroki; i++) {
+        delete [] mat[i];
+    }
+    delete [] mat;
+}
+void enter_size(unsigned int& stroki, unsigned int& stolbi)
+{
+    string str;
+    char zap;
+    getline(cin,str);
+    istringstream size(str);
+    if ((size >>stroki) && (size >>zap) && (size >> stolbi) && (zap == ',')&&(size.eof())) {
+        
+    }
+    else
+    {cout<<"An error has occured while reading input data"<<endl;
+        exit(0);
+    }
+}
+
+void reverse(int *mas,int first,int last){
+    if(last<first) exit(0);
+    int length=last - first;
+    for (int i  = 0; i < length / 2; i++)
+        swap(mas[first+i], mas[last - i - 1]);
+}
+
+int *rotate(int **mat,unsigned int stroki,unsigned int stolbi,int sdvig){
+    int *mas = new int [2*stolbi+2*stroki-4-1];              
+    int place=0;
+    int i=0;
+    int j=0;
+    for (i; i<stroki; i++) {
+        mas[place]=mat[i][0];
+        place++;
+    }
+    i=i-1;                                  
+    for (j++; j<stolbi; j++) {
+        mas[place]=mat[i][j];
+        place++;
+    }
+    j=j-1;                                
+    for (i--; i>=0; i--) {
+        mas[place]=mat[i][j];
+        place++;
+    }
+    for (j--; j>0; j--) {
+        mas[place]=mat[0][j];
+        place++;
+    }
+    reverse(mas,0,sdvig);
+    reverse(mas,sdvig,2*stolbi+2*stroki-4);         
+    reverse(mas,0,2*stolbi+2*stroki-4);
+
+    place=0;
+    i=0;
+    j=0;
+    for (i; i<stroki; i++) {
+        mat[i][0]=mas[place];
+        place++;
+    }
+    i=i-1;                                  
+    for (j++; j<stolbi; j++) {
+        mat[i][j]=mas[place];
+        place++;
+    }
+    j=j-1;                                
+    for (i--; i>=0; i--) {
+       mat[i][j] =mas[place];
+        place++;
+    }
+    for (j--; j>0; j--) {
+        mat[0][j]=mas[place];
+        place++;
+    }
+    return mas;
+}
+
+void out(int **mat3,unsigned int stroki,unsigned int stolbi){
+    
+    for (int i=0; i<stroki; i++) {
+        for (int j=0; j<stolbi; j++) {
+            cout<<mat3[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+}
+
+int main(){
+    int sdvig;
+    unsigned int stroki = 0,stolbi=0;
+    enter_size(stroki,stolbi);
+    int **mat = create_mat(stroki,stolbi);
+    enter_mat(stroki,stolbi,mat);
+    cin>>sdvig;
+    rotate(mat,stroki,stolbi,sdvig);
+    out(mat,stroki,stolbi);
+    del_mem(mat,stroki,stolbi);
+    return 0;
+}
